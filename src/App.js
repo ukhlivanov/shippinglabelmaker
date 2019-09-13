@@ -1,26 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Wizard from './core/components/wizard/wizard';
+import shippingObj from './core/components/shippingObj';
+import Header from './core/components/header';
+import steps from './features/queue/index';
+import ShippingLabel from './features/shipping-label/shpping-label';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class ShippingLabelMaker extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      labelReady: false,
+      wizardContext: shippingObj
+    };
+    this.createLabel = this.createLabel.bind(this);
+  }
+
+  createLabel(val) {
+    this.setState({
+      labelReady: true,
+      wizardContext: val
+    });
+  }
+  render() {
+    return (
+      <div>
+        {this.state.labelReady ? (
+          <ShippingLabel info={this.state.wizardContext} />
+        ) : (
+          <Wizard
+            header={Header}
+            steps={steps}
+            wizardContext={this.state.wizardContext}
+            onComplete={this.createLabel}
+          />
+        )}
+      </div>
+    );
+  }
 }
-
-export default App;
